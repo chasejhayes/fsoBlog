@@ -38,6 +38,14 @@ test('a specific blog is within the returned blogs', async () => {
     assert(title.includes("My first blog"))
 })
 
+test.only('blog is defined by id', async () => {
+   
+    const blogs = await helper.blogsInDb()
+    const checkAll = blogs.every(obj => obj.hasOwnProperty('id'))
+    assert.strictEqual(checkAll, true)
+})
+
+
 test('a valid blog can be added ', async () => {
     const newBlog = {
         title: "Title",
@@ -74,6 +82,7 @@ test('blog without title is not added', async () => {
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlog.length)
 })
+
 
 
 after(async () => {
