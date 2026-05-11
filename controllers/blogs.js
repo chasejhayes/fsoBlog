@@ -17,7 +17,7 @@ blogRouter.post('/', (request, response, next) => {
   const body = request.body
 
   if (!body.title) {
-    return response.status(400).json({error: 'title missing'})
+    return response.status(400).json({ error: 'title missing' })
   }
 
   const blog = new Blog({
@@ -34,5 +34,10 @@ blogRouter.post('/', (request, response, next) => {
     .catch(error => next(error))
 })
 
+blogRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
+
+})
 
 module.exports = blogRouter
