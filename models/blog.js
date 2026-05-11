@@ -7,7 +7,7 @@ const mongoose = require("mongoose")
 // const mongoUrl = 'mongodb://localhost/bloglist'
 // mongoose.connect(mongoUrl, { family: 4 })
 
-const blogSchema = mongoose.Schema({
+const blogSchema = new mongoose.Schema({
     title: String,
     author: String,
     url: String,

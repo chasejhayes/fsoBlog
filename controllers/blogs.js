@@ -13,12 +13,9 @@ blogRouter.get('/', async (request, response) => {
 })
 
 
-blogRouter.post('/', (request, response, next) => {
-  const body = request.body
 
-  if (!body.title) {
-    return response.status(400).json({ error: 'title missing' })
-  }
+blogRouter.post('/', async (request, response) => {
+  const body = request.body
 
   const blog = new Blog({
     title: body.title,
@@ -26,12 +23,8 @@ blogRouter.post('/', (request, response, next) => {
     url: body.url,
     likes: body.likes
   })
-
-  blog.save()
-    .then(savedBlog => {
-      response.status(201).json(savedBlog)
-    })
-    .catch(error => next(error))
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
 })
 
 blogRouter.delete('/:id', async (request, response) => {
@@ -40,4 +33,41 @@ blogRouter.delete('/:id', async (request, response) => {
 
 })
 
+blogRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+    console.log(blog)
+  } else {
+    response.status(404).end()
+  }
+})
+
+blogRouter.put('/:id', async (request, response) => {
+  const { title, author, url, likes } = request.body
+  const changedNote = await Blog.findById(request.params.id)
+  if (!changedNote) {
+    return response.status(404).end()
+  }
+
+  changedNote.title = title
+  changedNote.url = url
+  changedNote.likes = likes
+  changedNote.author = author
+
+  await changedNote.save()
+  response.json(changedNote)
+
+
+})
+
 module.exports = blogRouter
+
+
+// {
+//     "title": "Changed Blog",
+//     "author": "Chase H",
+//     "url": "a url",
+//     "likes": 1
+
+// }
