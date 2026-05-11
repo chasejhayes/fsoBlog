@@ -83,7 +83,7 @@ test('blog without title is not added', async () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlog.length)
 })
 
-test.only('delete note', async () => {
+test('delete note', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -95,6 +95,33 @@ test.only('delete note', async () => {
     assert(!ids.includes(blogToDelete.id))
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlog.length -1)
+})
+
+test.only('edit blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const toEditBlog = blogsAtStart[0]
+
+    // toEditBlog.title = "test"
+    // toEditBlog.author = "test"
+    // toEditBlog.url = "test"
+    // toEditBlog.likes = 12
+
+    await api.put(`/api/blogs/${toEditBlog.id}`)
+        .send( {
+        title: "test",
+        author: "test",
+        url: "test",
+        likes: 10
+        })
+
+    const blogsAtEnd = await helper.blogsInDb()
+    // const editedBlog = blogsAtEnd[0]
+
+    const contents = blogsAtEnd.map(n => n.title)
+    console.log(contents)
+    assert(contents.includes("test"))
+
+
 })
 
 
